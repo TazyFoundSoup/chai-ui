@@ -59,6 +59,26 @@ void ch_window::run() {
     }
 }
 
+void ch_window::setIcon(std::string iconPath) {
+    std::wstring iconPathW = std::wstring(iconPath.begin(), iconPath.end());
+    
+    HICON hIcon = (HICON)LoadImageW(
+        NULL, 
+        iconPathW.c_str(), 
+        IMAGE_ICON, 
+        0, 
+        0, 
+        LR_LOADFROMFILE
+    );
+    
+    if (!hIcon) {
+        throw std::runtime_error("Failed to load icon from path: " + iconPath);
+    }
+
+    SendMessage(hwnd, WM_SETICON, ICON_BIG,   (LPARAM)hIcon);
+    SendMessage(hwnd, WM_SETICON, ICON_SMALL, (LPARAM)hIcon);
+}
+
 LRESULT CALLBACK ch_window::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     switch (uMsg) {
         case WM_DESTROY:

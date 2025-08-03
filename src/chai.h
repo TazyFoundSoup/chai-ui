@@ -29,6 +29,9 @@ public:
     void destroy();
     void run();
 
+    // Setters for window properties
+    void setIcon(std::string iconPath);
+
 private:
     bool dbgEnabled = false;
 
