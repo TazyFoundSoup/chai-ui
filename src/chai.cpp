@@ -12,9 +12,11 @@ void ch_window::enableDbg() {
 }
 
 void ch_window::dbgOut(const std::string& msg) {
-    if (dbgEnabled) {
-        std::cout << "[chai-dbg] " << msg << std::endl; // TODO: add timestamps
-    }
+    if (!dbgEnabled) return;
+
+    std::string output = "[chai-ui] " + msg + "\n";
+    std::cout << output;                 // Console if attached
+    OutputDebugStringA(output.c_str());  // IDE/DebugView if no console
 }
 
 void ch_window::create() {
@@ -30,12 +32,16 @@ void ch_window::create() {
                 throw std::runtime_error("Failed to register window class");
             }
         }
+        dbgOut("Window class registered: " + std::string(className));
 
         hwnd = CreateWindowExA(
             0, className, title.c_str(), WS_OVERLAPPEDWINDOW,
             CW_USEDEFAULT, CW_USEDEFAULT, width, height,
             NULL, NULL, wc.hInstance, NULL
         );
+
+        dbgOut("Window created with properties: " + title + 
+               " (" + std::to_string(width) + "x" + std::to_string(height) + ")");
 
         if (!hwnd) throw std::runtime_error("Failed to create window");
 
@@ -47,6 +53,7 @@ void ch_window::destroy() {
     if (hwnd) {
         DestroyWindow(hwnd);
         hwnd = nullptr;
+        dbgOut("Window destroyed: " + title);
     }
 }
 
@@ -57,6 +64,7 @@ void ch_window::run() {
         TranslateMessage(&msg);
         DispatchMessage(&msg);
     }
+    dbgOut("Message loop exited for window: " + title);
 }
 
 void ch_window::setIcon(std::string iconPath) {
@@ -77,6 +85,7 @@ void ch_window::setIcon(std::string iconPath) {
 
     SendMessage(hwnd, WM_SETICON, ICON_BIG,   (LPARAM)hIcon);
     SendMessage(hwnd, WM_SETICON, ICON_SMALL, (LPARAM)hIcon);
+    dbgOut("Icon set for window: " + title + " from path: " + iconPath);
 }
 
 LRESULT CALLBACK ch_window::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {

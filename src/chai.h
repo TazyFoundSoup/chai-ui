@@ -12,6 +12,29 @@
 
 #pragma once
 
+struct ch_event {
+    enum class type {
+        None,
+        Closed,
+        KeyDown,
+        KeyUp,
+        MouseMove,
+        MouseDown,
+        MouseUp,
+        MouseWheel,
+        Resized,
+    } type = type::None;
+
+    union {
+        struct { int x, y; } mouseMove;
+        struct { int button; } mouseButton;
+        struct { int delta; } mouseWheel;
+        struct { int keycode; bool repeat; } key;
+        struct { int width, height; } size;
+    };
+};
+
+
 class ch_window {
 public:
     ch_window(const std::string& t, int w, int h) : title(t), width(w), height(h) {
