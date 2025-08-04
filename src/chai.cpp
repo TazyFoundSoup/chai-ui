@@ -87,6 +87,22 @@ bool ch_window::poll_event(ch_event& event) {
                 event.mouse_move.x = (int)(short)LOWORD(msg.lParam); // Extract
                 event.mouse_move.y = (int)(short)HIWORD(msg.lParam);
                 break;
+            case WM_LBUTTONDOWN:
+                event.type = ch_event::type::mouse_down;
+                event.mouse_button.button = 0;
+                break;
+            case WM_LBUTTONUP:
+                event.type = ch_event::type::mouse_up;
+                event.mouse_button.button = 0;
+                break;
+            case WM_RBUTTONDOWN:
+                event.type = ch_event::type::mouse_down;
+                event.mouse_button.button = 1;
+                break;
+            case WM_RBUTTONUP:
+                event.type = ch_event::type::mouse_up;
+                event.mouse_button.button = 1;
+                break;
         }
         return true;
 

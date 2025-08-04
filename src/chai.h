@@ -47,7 +47,7 @@ public:
         UnregisterClassA(className, wc.hInstance);
     }
 
-    // Debug functions
+    // Functions for debugging
     void dbgOut(const std::string& msg);
 
     void create();
