@@ -14,21 +14,21 @@
 
 struct ch_event {
     enum class type {
-        None,
-        Closed,
-        KeyDown,
-        KeyUp,
-        MouseMove,
-        MouseDown,
-        MouseUp,
-        MouseWheel,
-        Resized,
-    } type = type::None;
+        none,
+        closed,
+        key_down,
+        key_up,
+        mouse_move,
+        mouse_down,
+        mouse_up,
+        mouse_wheel,
+        resized,
+    } type = type::none;
 
     union {
-        struct { int x, y; } mouseMove;
-        struct { int button; } mouseButton;
-        struct { int delta; } mouseWheel;
+        struct { int x, y; } mouse_move;
+        struct { int button; } mouse_button;
+        struct { int delta; } mouse_wheel;
         struct { int keycode; bool repeat; } key;
         struct { int width, height; } size;
     };
@@ -37,20 +37,23 @@ struct ch_event {
 
 class ch_window {
 public:
-    ch_window(const std::string& t, int w, int h) : title(t), width(w), height(h) {
+    ch_window(const std::string& t, int w, int h, bool d) : title(t), width(w), height(h), dbgEnabled(d) {
         create();
+        if (dbgEnabled) {
+            dbgOut("Debugging enabled for window");
+        }
     }
     ~ch_window() {
         UnregisterClassA(className, wc.hInstance);
     }
 
     // Debug functions
-    void enableDbg();
     void dbgOut(const std::string& msg);
 
     void create();
     void destroy();
     void run();
+    bool poll_event(ch_event& event);
 
     // Setters for window properties
     void setIcon(std::string iconPath);

@@ -7,9 +7,6 @@
 
 #include "chai.h"
 
-void ch_window::enableDbg() {
-    dbgEnabled = true;
-}
 
 void ch_window::dbgOut(const std::string& msg) {
     if (!dbgEnabled) return;
@@ -65,6 +62,27 @@ void ch_window::run() {
         DispatchMessage(&msg);
     }
     dbgOut("Message loop exited for window: " + title);
+}
+
+bool ch_window::poll_event(ch_event& event) {
+    MSG msg;
+    if (PeekMessage(&msg, hwnd, 0, 0, PM_REMOVE)) {
+        switch (msg.message) {
+            case WM_CLOSE:
+                event.type = ch_event::type::closed; break;
+            case WM_KEYDOWN:
+                event.type = ch_event::type::key_down;
+                event.key.keycode = static_cast<int>(msg.wParam);
+                // TODO: Implement repeat logic
+                event.key.repeat = false; break;
+            case WM_KEYUP:
+                event.type = ch_event::type::key_up;
+                event.key.keycode = static_cast<int>(msg.wParam);
+            case WM_MOUSEMOVE:
+                event.type = ch_event::type::mouse_move;
+                break; // TODO: Get mouse position 
+        }
+    }
 }
 
 void ch_window::setIcon(std::string iconPath) {
