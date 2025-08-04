@@ -80,7 +80,8 @@ bool ch_window::poll_event(ch_event& event) {
                 event.key.keycode = static_cast<int>(msg.wParam);
             case WM_MOUSEMOVE:
                 event.type = ch_event::type::mouse_move;
-                break; // TODO: Get mouse position 
+                event.mouse_move.x = (int)(short)LOWORD(msg.lParam); // Extract
+                event.mouse_move.y = (int)(short)HIWORD(msg.lParam); break;
         }
     }
 }
