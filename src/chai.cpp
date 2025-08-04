@@ -66,23 +66,33 @@ void ch_window::run() {
 
 bool ch_window::poll_event(ch_event& event) {
     MSG msg;
+    event = {}; // Zero out event in case of weird bugs
     if (PeekMessage(&msg, hwnd, 0, 0, PM_REMOVE)) {
         switch (msg.message) {
             case WM_CLOSE:
-                event.type = ch_event::type::closed; break;
+                event.type = ch_event::type::closed;
+                break;
             case WM_KEYDOWN:
                 event.type = ch_event::type::key_down;
                 event.key.keycode = static_cast<int>(msg.wParam);
                 // TODO: Implement repeat logic
-                event.key.repeat = false; break;
+                event.key.repeat = false;
+                break;
             case WM_KEYUP:
                 event.type = ch_event::type::key_up;
                 event.key.keycode = static_cast<int>(msg.wParam);
+                break;
             case WM_MOUSEMOVE:
                 event.type = ch_event::type::mouse_move;
                 event.mouse_move.x = (int)(short)LOWORD(msg.lParam); // Extract
-                event.mouse_move.y = (int)(short)HIWORD(msg.lParam); break;
+                event.mouse_move.y = (int)(short)HIWORD(msg.lParam);
+                break;
         }
+        return true;
+
+    } else {
+        event.type = ch_event::type::none;
+        return false;
     }
 }
 
