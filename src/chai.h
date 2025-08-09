@@ -40,7 +40,7 @@ public:
     ch_window(const std::string& t, int w, int h, bool d) : title(t), width(w), height(h), dbgEnabled(d) {
         create();
         if (dbgEnabled) {
-            dbgOut("Debugging enabled for window");
+            dbg_out("Debugging enabled for window");
         }
     }
     ~ch_window() {
@@ -48,7 +48,7 @@ public:
     }
 
     // Functions for debugging
-    void dbgOut(const std::string& msg);
+    void dbg_out(const std::string& msg);
 
     void create();
     void destroy();
@@ -56,7 +56,7 @@ public:
     bool poll_event(ch_event& event);
 
     // Setters for window properties
-    void setIcon(std::string iconPath);
+    void set_icon(std::string iconPath);
 
 private:
     bool dbgEnabled = false;

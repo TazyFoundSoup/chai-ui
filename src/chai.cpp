@@ -8,7 +8,7 @@
 #include "chai.h"
 
 
-void ch_window::dbgOut(const std::string& msg) {
+void ch_window::dbg_out(const std::string& msg) {
     if (!dbgEnabled) return;
 
     std::string output = "[chai-ui] " + msg + "\n";
@@ -29,7 +29,7 @@ void ch_window::create() {
                 throw std::runtime_error("Failed to register window class");
             }
         }
-        dbgOut("Window class registered: " + std::string(className));
+        dbg_out("Window class registered: " + std::string(className));
 
         hwnd = CreateWindowExA(
             0, className, title.c_str(), WS_OVERLAPPEDWINDOW,
@@ -37,7 +37,7 @@ void ch_window::create() {
             NULL, NULL, wc.hInstance, NULL
         );
 
-        dbgOut("Window created with properties: " + title + 
+        dbg_out("Window created with properties: " + title + 
                " (" + std::to_string(width) + "x" + std::to_string(height) + ")");
 
         if (!hwnd) throw std::runtime_error("Failed to create window");
@@ -50,7 +50,7 @@ void ch_window::destroy() {
     if (hwnd) {
         DestroyWindow(hwnd);
         hwnd = nullptr;
-        dbgOut("Window destroyed: " + title);
+        dbg_out("Window destroyed: " + title);
     }
 }
 
@@ -61,7 +61,7 @@ void ch_window::run() {
         TranslateMessage(&msg);
         DispatchMessage(&msg);
     }
-    dbgOut("Message loop exited for window: " + title);
+    dbg_out("Message loop exited for window: " + title);
 }
 
 bool ch_window::poll_event(ch_event& event) {
@@ -112,7 +112,7 @@ bool ch_window::poll_event(ch_event& event) {
     }
 }
 
-void ch_window::setIcon(std::string iconPath) {
+void ch_window::set_icon(std::string iconPath) {
     std::wstring iconPathW = std::wstring(iconPath.begin(), iconPath.end());
     
     HICON hIcon = (HICON)LoadImageW(
@@ -130,7 +130,7 @@ void ch_window::setIcon(std::string iconPath) {
 
     SendMessage(hwnd, WM_SETICON, ICON_BIG,   (LPARAM)hIcon);
     SendMessage(hwnd, WM_SETICON, ICON_SMALL, (LPARAM)hIcon);
-    dbgOut("Icon set for window: " + title + " from path: " + iconPath);
+    dbg_out("Icon set for window: " + title + " from path: " + iconPath);
 }
 
 LRESULT CALLBACK ch_window::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
