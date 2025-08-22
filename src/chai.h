@@ -9,6 +9,8 @@
 #include <iostream>
 #include <string>
 #include <stdexcept>
+#include <vector>
+#include <memory>
 
 #pragma once
 
@@ -34,6 +36,31 @@ struct ch_event {
     };
 };
 
+struct ch_drawable {
+    virtual void draw(HDC hdc) = 0;
+    virtual ~ch_drawable() {}
+};
+
+struct ch_rect : public ch_drawable {
+    RECT rect;
+    COLORREF color;
+
+    ch_rect(int x1, int y1, int x2, int y2, COLORREF c) {
+    rect = {x1, y1, x2, y2};
+    color = c;
+    }
+
+    void draw(HDC hdc) override;
+};
+
+struct ch_text : public ch_drawable {
+    std::string str;
+    int x, y;
+    
+    // Most unreable code award goes to the line below this comment
+    ch_text(std::string c, int x, int y) : str(c), x(x), y(y) {};
+    void draw(HDC hdc) override;
+};
 
 class ch_window {
 public:
@@ -53,17 +80,22 @@ public:
     void create();
     void destroy();
     void run();
+    void draw(std::unique_ptr<ch_drawable> drawable);
     bool poll_event(ch_event& event);
 
     // Setters for window properties
     void set_icon(std::string iconPath);
 
 private:
+    // Note for contributers
+    // Private is going to be in camelCase but public is going to be in snake_case
     bool dbgEnabled = false;
 
     char className[64];
     std::string title;
     int width, height;
+
+    std::vector<std::unique_ptr<ch_drawable>> drawList;
 
     WNDCLASSA wc;
     HWND hwnd;

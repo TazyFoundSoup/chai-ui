@@ -8,6 +8,20 @@
 #include "chai.h"
 
 
+void ch_rect::draw(HDC hdc) {
+    HBRUSH brush = CreateSolidBrush(color);
+    FillRect(hdc, &rect, brush);
+    DeleteObject(brush);
+}
+
+void ch_text::draw(HDC hdc) {
+    COLORREF oldColor = SetTextColor(hdc, RGB(0, 0, 0)); // Black text
+    TextOutA(hdc, x, y, str.c_str(), (int)str.length());
+    SetTextColor(hdc, oldColor); // Restore old color
+}
+
+
+
 void ch_window::dbg_out(const std::string& msg) {
     if (!dbgEnabled) return;
 
@@ -62,6 +76,10 @@ void ch_window::run() {
         DispatchMessage(&msg);
     }
     dbg_out("Message loop exited for window: " + title);
+}
+
+void ch_window::draw(std::unique_ptr<ch_drawable> drawable) {
+    drawList.push_back(std::move(drawable));
 }
 
 bool ch_window::poll_event(ch_event& event) {
@@ -138,6 +156,15 @@ LRESULT CALLBACK ch_window::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPAR
         case WM_DESTROY:
             PostQuitMessage(0);
             return 0;
+        case WM_PAINT: {
+            PAINTSTRUCT ps;
+            HDC hdc = BeginPaint(hwnd, &ps);
+
+            // TODO: Iterate over drawList to draw objects
+
+            EndPaint(hwnd, &ps);
+            return 0;
+        }
     }
     
     return DefWindowProc(hwnd, uMsg, wParam, lParam);
