@@ -5,8 +5,8 @@
 /*                                                                          */
 /****************************************************************************/
 
-#ifndef DISPLAY_H_
-#define DISPLAY_H_
+#ifndef CHAI_INTERNAL_DISPLAY_H_
+#define CHAI_INTERNAL_DISPLAY_H_
 
 #include <windows.h>
 #include <iostream>
@@ -16,6 +16,9 @@
 #include <memory>
 
 #pragma once
+
+namespace chai {
+namespace internal {
 
 struct ch_event {
     enum class type {
@@ -106,4 +109,8 @@ private:
     static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 };
 
-#endif // DISPLAY_H_
+} // internal
+} // chai
+
+#endif // CHAI_INTERNAL_DISPLAY_H_
+

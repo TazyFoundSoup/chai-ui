@@ -7,6 +7,8 @@
 
 #include "Display.h"
 
+namespace chai {
+namespace internal {
 
 void ch_rect::draw(HDC hdc) {
     HBRUSH brush = CreateSolidBrush(color);
@@ -169,3 +171,6 @@ LRESULT CALLBACK ch_window::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPAR
     
     return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
+
+} // internal
+} // chai
