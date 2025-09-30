@@ -5,7 +5,7 @@
 /*                                                                          */
 /****************************************************************************/
 
-#include "Display.h"
+#include "Display.hpp"
 
 namespace chai {
 namespace internal {
