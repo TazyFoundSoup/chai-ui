@@ -5,6 +5,8 @@
 /*                                                                          */
 /****************************************************************************/
 
+#ifdef _WIN32
+
 #ifndef CHAI_INTERNAL_DISPLAY_H_
 #define CHAI_INTERNAL_DISPLAY_H_
 
@@ -114,3 +116,8 @@ private:
 
 #endif // CHAI_INTERNAL_DISPLAY_H_
 
+#else // _WIN32
+
+#error "Chai-ui is only compatible with Windows machines"
+
+#endif // _WIN32
