@@ -118,6 +118,8 @@ private:
     static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
     Microsoft::WRL::ComPtr<ID2D1Factory> d2dfactory;
+    Microsoft::WRL::ComPtr<ID2D1HwndRenderTarget> renderTarget;
+
 };
 
 } // internal

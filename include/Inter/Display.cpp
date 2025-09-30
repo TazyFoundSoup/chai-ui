@@ -44,7 +44,7 @@ void ch_window::create() {
         if (!RegisterClassA(&wc)) {
             throw std::runtime_error("Failed to register window class");
         }
-    }
+    } //                                                                                                                                                          Damn isn't 😢
     dbg_out("Window class registered: " + std::string(className));
 
     hwnd = CreateWindowExA(
@@ -67,6 +67,23 @@ void ch_window::create() {
         dbg_out("Factory created successfully");
     }
 
+
+    // To get the size of the client area
+    // I really wish windows made this easier cause why do I have to find the width and height myself
+    // if that's all I'm doing with it.
+    // microsoft, this is disappointing.
+    // .________.
+    RECT rc;
+    GetClientRect(hwnd, &rc);
+
+    D2D1_SIZE_U size = D2D1::SizeU(
+        rc.right - rc.left,
+        rc.bottom - rc.top
+    );
+
+    hr = d2dfactory->CreateHwndRenderTarget(
+        
+    )
     ShowWindow(hwnd, SW_SHOW);
     UpdateWindow(hwnd);
 }
@@ -113,7 +130,7 @@ bool ch_window::poll_event(ch_event& event) {
                 break;
             case WM_MOUSEMOVE:
                 event.type = ch_event::type::mouse_move;
-                event.mouse_move.x = (int)(short)LOWORD(msg.lParam); // Extract
+                event.mouse_move.x = (int)(short)LOWORD(msg.lParam);
                 event.mouse_move.y = (int)(short)HIWORD(msg.lParam);
                 break;
             case WM_LBUTTONDOWN:
