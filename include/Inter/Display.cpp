@@ -35,31 +35,40 @@ void ch_window::dbg_out(const std::string& msg) {
 void ch_window::create() {
     sprintf(className, "chai-ui-%lu", GetCurrentProcessId());
 
-        wc = {};
-        wc.lpfnWndProc = WindowProc;
-        wc.hInstance = GetModuleHandle(NULL);
-        wc.lpszClassName = className;
+    wc = {};
+    wc.lpfnWndProc = WindowProc;
+    wc.hInstance = GetModuleHandle(NULL);
+    wc.lpszClassName = className;
 
-        if (!GetClassInfoA(wc.hInstance, className, &wc)) {
-            if (!RegisterClassA(&wc)) {
-                throw std::runtime_error("Failed to register window class");
-            }
+    if (!GetClassInfoA(wc.hInstance, className, &wc)) {
+        if (!RegisterClassA(&wc)) {
+            throw std::runtime_error("Failed to register window class");
         }
-        dbg_out("Window class registered: " + std::string(className));
+    }
+    dbg_out("Window class registered: " + std::string(className));
 
-        hwnd = CreateWindowExA(
-            0, className, title.c_str(), WS_OVERLAPPEDWINDOW,
-            CW_USEDEFAULT, CW_USEDEFAULT, width, height,
-            NULL, NULL, wc.hInstance, NULL
-        );
+    hwnd = CreateWindowExA(
+        0, className, title.c_str(), WS_OVERLAPPEDWINDOW,
+        CW_USEDEFAULT, CW_USEDEFAULT, width, height,
+        NULL, NULL, wc.hInstance, NULL
+    );
 
-        dbg_out("Window created with properties: " + title + 
-               " (" + std::to_string(width) + "x" + std::to_string(height) + ")");
+    dbg_out("Window created with properties: " + title + 
+            " (" + std::to_string(width) + "x" + std::to_string(height) + ")");
 
-        if (!hwnd) throw std::runtime_error("Failed to create window");
+    if (!hwnd) throw std::runtime_error("Failed to create window");
 
-        ShowWindow(hwnd, SW_SHOW);
-        UpdateWindow(hwnd);
+    // Attach D2D1 factory
+    HRESULT hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, d2dfactory.GetAddressOf());
+
+    if (FAILED(hr)) {
+        throw std::runtime_error("Failed to create D2D1 factory");
+    } else {
+        dbg_out("Factory created successfully");
+    }
+
+    ShowWindow(hwnd, SW_SHOW);
+    UpdateWindow(hwnd);
 }
 
 void ch_window::destroy() {
