@@ -5,7 +5,9 @@
 /*                                                                          */
 /****************************************************************************/
 
-#include "Display.hpp"
+#ifdef _WIN32
+
+#include "Chai/Inter/Display.h"
 
 namespace chai {
 namespace internal {
@@ -82,8 +84,17 @@ void ch_window::create() {
     );
 
     hr = d2dfactory->CreateHwndRenderTarget(
-        
-    )
+        D2D1::RenderTargetProperties(),
+        D2D1::HwndRenderTargetProperties(hwnd, size),
+        renderTarget.GetAddressOf()
+    );
+
+    if (FAILED(hr)) {
+        throw std::runtime_error("Failed to create D2D1 render target");
+    } else {
+        dbg_out("Render target created successfully");
+    }
+
     ShowWindow(hwnd, SW_SHOW);
     UpdateWindow(hwnd);
 }
@@ -200,3 +211,9 @@ LRESULT CALLBACK ch_window::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPAR
 
 } // internal
 } // chai
+
+#else
+
+#error "Chai-ui is only compatible with Windows machines"
+
+#endif
