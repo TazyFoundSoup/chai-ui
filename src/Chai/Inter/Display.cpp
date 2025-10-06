@@ -5,21 +5,23 @@
 /*                                                                          */
 /****************************************************************************/
 
-#include "Display.hpp"
+#include "Chai/Inter/Display.hpp"
 
 namespace chai {
 namespace internal {
 
 void ch_rect::draw(HDC hdc) {
-    HBRUSH brush = CreateSolidBrush(color);
-    FillRect(hdc, &rect, brush);
-    DeleteObject(brush);
+    // TODO: d2d1 conv
+    //HBRUSH brush = CreateSolidBrush(color);
+    //FillRect(hdc, &rect, brush);
+    //DeleteObject(brush);
 }
 
 void ch_text::draw(HDC hdc) {
-    COLORREF oldColor = SetTextColor(hdc, RGB(0, 0, 0)); // Black text
-    TextOutA(hdc, x, y, str.c_str(), (int)str.length());
-    SetTextColor(hdc, oldColor); // Restore old color
+    // TODO: dwrite conv
+    //COLORREF oldColor = SetTextColor(hdc, RGB(0, 0, 0)); // Black text
+    //TextOutA(hdc, x, y, str.c_str(), (int)str.length());
+    //SetTextColor(hdc, oldColor); // Restore old color
 }
 
 
