@@ -11,6 +11,9 @@
 #define CHAI_INTERNAL_DISPLAY_H_
 
 #include <windows.h>
+#include <d2d1.h>
+#include <dwrite.h>
+
 #include <iostream>
 #include <string>
 #include <stdexcept>
