@@ -34,7 +34,7 @@ void ch_window::dbg_out(const std::string& msg) {
     OutputDebugStringA(output.c_str());  // IDE/DebugView if no console
 }
 
-void ch_window::create() {
+HRESULT ch_window::create() {
     sprintf(className, "chai-ui-%lu", GetCurrentProcessId());
 
         wc = {};

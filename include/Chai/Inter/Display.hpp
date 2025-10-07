@@ -119,7 +119,7 @@ public:
     // Functions for debugging
     void dbg_out(const std::string& msg);
 
-    void create();
+    HRESULT create();
     void destroy();
     void run();
     void draw(std::unique_ptr<ch_drawable> drawable);
