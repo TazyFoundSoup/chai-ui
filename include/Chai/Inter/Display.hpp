@@ -12,13 +12,19 @@
 
 #include <windows.h>
 #include <d2d1.h>
+#include <d2d1helper.h>
 #include <dwrite.h>
+#include <wincodec.h>
 
 #include <iostream>
 #include <string>
 #include <stdexcept>
 #include <vector>
-#include <memory>
+#include <memory.h>
+#include <stdlib.h>
+#include <malloc.h>
+#include <wchar.h>
+#include <math.h>
 
 #pragma once
 
