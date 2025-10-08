@@ -197,7 +197,7 @@ void ch_window::OnResize(UINT width, UINT height) {
 
 
 
-ID2D1SolidColorBrush *ch_window::ch_brush_manager::poof(D2D1_COLOR_F color) {
+ID2D1SolidColorBrush* ch_window::ch_brush_manager::poof(D2D1_COLOR_F color) {
     uint32_t key = hashclr(color);
 
     auto it = brush_cache.find(key);
