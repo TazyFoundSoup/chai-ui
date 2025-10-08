@@ -107,7 +107,12 @@ struct ch_text : public ch_drawable {
 
 class ch_window {
 public:
-    ch_window(const std::string& t, int w, int h, bool d) : title(t), width(w), height(h), dbgEnabled(d) {
+    ch_window(const std::string& t, int w, int h, bool d)
+        : title(t), width(w), height(h), dbgEnabled(d),
+        m_pDirect2dFactory(nullptr),
+        m_pRenderTarget(nullptr),
+        brush_manager(m_pRenderTarget)
+    {
         create();
         if (dbgEnabled) {
             dbg_out("Debugging enabled for window");
@@ -133,31 +138,8 @@ private:
     // Note for contributers
     // Private is going to be in camelCase but public is going to be in snake_case
     // This is just for debugging, but try to keep in case
-    bool dbgEnabled = false;
 
-    char className[64];
-    std::string title;
-    int width, height;
-
-    std::vector<std::unique_ptr<ch_drawable>> drawList;
-
-    WNDCLASSA wc;
-    HWND hwnd;
-    static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
-    // Resource related functions
-    HRESULT CreateDeviceIndependentResources();
-    HRESULT CreateDeviceDependentResources();
-
-    void DiscardDeviceResource();
-
-
-    HRESULT OnRender();
-
-    void OnResize(UINT width, UINT height);
-
-
-    // Inner classes
+    // Inner classes have to go ahead because C++ is stupid and is top to bottom
     class ch_brush_manager {
     // Here's a quick explanation
     // In windows you need to make a brush for every colour.
@@ -182,6 +164,34 @@ private:
 
         ID2D1HwndRenderTarget* m_pRenderTarget;
     };
+
+    bool dbgEnabled = false;
+
+    char className[64];
+    std::string title;
+    int width, height;
+
+    std::vector<std::unique_ptr<ch_drawable>> drawList;
+
+    WNDCLASSA wc;
+    HWND hwnd;
+    static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+    // D2D1 requirements
+    ID2D1Factory* m_pDirect2dFactory;
+    ID2D1HwndRenderTarget* m_pRenderTarget;
+    ch_brush_manager brush_manager;
+
+    // Resource related functions
+    HRESULT CreateDeviceIndependentResources();
+    HRESULT CreateDeviceDependentResources();
+
+    void DiscardDeviceResource();
+
+
+    HRESULT OnRender();
+
+    void OnResize(UINT width, UINT height);
 };
 
 } // internal
