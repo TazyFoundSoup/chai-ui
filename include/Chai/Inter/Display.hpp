@@ -25,6 +25,7 @@
 #include <malloc.h>
 #include <wchar.h>
 #include <math.h>
+#include <unordered_map>
 
 #pragma once
 
@@ -154,6 +155,33 @@ private:
     HRESULT OnRender();
 
     void OnResize(UINT width, UINT height);
+
+
+    // Inner classes
+    class ch_brush_manager {
+    // Here's a quick explanation
+    // In windows you need to make a brush for every colour.
+    // And since chai-ui is a header, it needs to have lots of colours.
+    // So there's a cache for brushes.
+    public:
+        ch_brush_manager(ID2D1HwndRenderTarget* rt) : m_pRenderTarget(rt){}
+        ~ch_brush_manager() {
+            // TODO: Release all brushes in the cache
+        }
+        // This is just get it from the cache if it exists
+        // or create it if it doesn't
+        ID2D1SolidColorBrush* poof(D2D1_COLOR_F color); // idk what else to call it
+
+    private:
+        // Helper tool for hashing color
+        uint32_t hashclr(D2D1_COLOR_F c);
+
+        // uint32_t -> colour (use the hashclr function for hashing a D2D color into uint32_t)
+        // ID2D1SolidColorBrush* -> brush
+        std::unordered_map<uint32_t, ID2D1SolidColorBrush*> brush_cache;
+
+        ID2D1HwndRenderTarget* m_pRenderTarget;
+    };
 };
 
 } // internal

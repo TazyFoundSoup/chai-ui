@@ -192,7 +192,37 @@ HRESULT ch_window::OnRender() {
 }
 
 void ch_window::OnResize(UINT width, UINT height) {
-    
+
+}
+
+
+
+ID2D1SolidColorBrush *ch_window::ch_brush_manager::poof(D2D1_COLOR_F color) {
+    uint32_t key = hashclr(color);
+
+    auto it = brush_cache.find(key);
+    if (it != brush_cache.end()) return it->second;
+
+    // From this point, we know the brush is not in the cache
+    // hence we create a new one
+    ID2D1SolidColorBrush* brush = nullptr;
+    HRESULT hr = m_pRenderTarget->CreateSolidColorBrush(color, &brush);
+    if (FAILED(hr)) throw std::runtime_error("Failed to create SolidColorBrush");
+
+    // Then add the new brush to the cache
+    brush_cache[key] = brush;
+    return brush;
+}
+
+uint32_t ch_window::ch_brush_manager::hashclr(D2D1_COLOR_F c) {
+    // D2D1_COLOR_F is just a rgba struct
+    const uint32_t r = (uint32_t)(c.r * 255.0f);
+    const uint32_t g = (uint32_t)(c.g * 255.0f);
+    const uint32_t b = (uint32_t)(c.b * 255.0f);
+    const uint32_t a = (uint32_t)(c.a * 255.0f);
+
+    // Return in hash format
+    return (r << 24) | (g << 16) | (b << 8) | a;
 }
 } // internal
 } // chai
