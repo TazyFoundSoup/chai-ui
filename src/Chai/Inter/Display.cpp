@@ -6,6 +6,7 @@
 /****************************************************************************/
 
 #include "Chai/Inter/Display.hpp"
+#include "Display.hpp"
 
 namespace chai {
 namespace internal {
@@ -174,5 +175,24 @@ LRESULT CALLBACK ch_window::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPAR
     return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
 
+HRESULT ch_window::CreateDeviceIndependentResources() {
+    return E_NOTIMPL;
+}
+
+HRESULT ch_window::CreateDeviceDependentResources() {
+    return E_NOTIMPL;
+}
+
+void ch_window::DiscardDeviceResource() {
+
+}
+
+HRESULT ch_window::OnRender() {
+    return E_NOTIMPL;
+}
+
+void ch_window::OnResize(UINT width, UINT height) {
+    
+}
 } // internal
 } // chai

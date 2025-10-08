@@ -143,6 +143,17 @@ private:
     WNDCLASSA wc;
     HWND hwnd;
     static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+    // Resource related functions
+    HRESULT CreateDeviceIndependentResources();
+    HRESULT CreateDeviceDependentResources();
+
+    void DiscardDeviceResource();
+
+
+    HRESULT OnRender();
+
+    void OnResize(UINT width, UINT height);
 };
 
 } // internal
