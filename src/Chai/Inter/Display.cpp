@@ -36,7 +36,12 @@ void ch_window::dbg_out(const std::string& msg) {
 }
 
 HRESULT ch_window::create() {
-    sprintf(className, "chai-ui-%lu", GetCurrentProcessId());
+    HRESULT hr;
+
+    hr = CreateDeviceIndependentResources();
+    
+    if (SUCCEEDED(hr)) {
+        sprintf(className, "chai-ui-%lu", GetCurrentProcessId());
 
         wc = {};
         wc.lpfnWndProc = WindowProc;
@@ -61,8 +66,24 @@ HRESULT ch_window::create() {
 
         if (!hwnd) throw std::runtime_error("Failed to create window");
 
+        // From here we can assume hwnd exists so we don't need
+        // checking if the window exists before getting the DPI
+        // and other weird crap.
+
+        float dpi = GetDpiForWindow(hwnd);
+
+        SetWindowPos(
+            hwnd, NULL, NULL, NULL,
+            static_cast<int>(ceil(640.f * dpi / 96.f)),
+            static_cast<int>(ceil(480.f * dpi / 96.f)),
+            SWP_NOMOVE
+        );
+
         ShowWindow(hwnd, SW_SHOW);
         UpdateWindow(hwnd);
+    }
+
+    return hr;
 }
 
 void ch_window::destroy() {

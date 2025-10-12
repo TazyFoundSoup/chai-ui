@@ -54,6 +54,17 @@ EXTERN_C IMAGE_DOS_HEADER __ImageBase;
 #define HINST_THISCOMPONENT ((HINSTANCE)&__ImageBase)
 #endif
 
+
+// Global flags to be redefined for other defines
+#define ENABLE true
+#define DISABLE false
+
+
+// Debug
+#define DBG_ON ENABLE
+#define DBG_OFF DISABLE
+
+
 namespace chai {
 namespace internal {
 
@@ -107,7 +118,7 @@ struct ch_text : public ch_drawable {
 
 class ch_window {
 public:
-    ch_window(const std::string& t, int w, int h, bool d)
+    ch_window(const std::string& t, int w, int h, bool d = DBG_OFF)
         : title(t), width(w), height(h), dbgEnabled(d),
         m_pDirect2dFactory(nullptr),
         m_pRenderTarget(nullptr),
