@@ -10,11 +10,8 @@
 namespace Chai {
 namespace Internal {
 
-void ch_rect::draw(HDC hdc) {
-    // TODO: d2d1 conv
-    //HBRUSH brush = CreateSolidBrush(color);
-    //FillRect(hdc, &rect, brush);
-    //DeleteObject(brush);
+void Chai::Internal::ch_rect::draw(ID2D1RenderTarget &rt, D2D1_COLOR_F) {
+    
 }
 
 void ch_text::draw(HDC hdc) {

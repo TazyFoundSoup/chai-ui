@@ -91,7 +91,7 @@ struct ch_event {
 };
 
 struct ch_drawable {
-    virtual void draw(HDC hdc) = 0;
+    virtual void draw(ID2D1RenderTarget& rt) = 0;
     virtual ~ch_drawable() {}
 };
 
@@ -104,16 +104,17 @@ struct ch_rect : public ch_drawable {
     color = c;
     }
 
-    void draw(HDC hdc) override;
+    void draw(ID2D1RenderTarget& rt, D2D1_COLOR_F);
 };
 
 struct ch_text : public ch_drawable {
-    std::string str;
-    int x, y;
+    // I still need to learn dwrite so this may take a bit
+    //std::string str;
+    //int x, y;
     
     // Most unreable code award goes to the line below this comment
-    ch_text(std::string c, int x, int y) : str(c), x(x), y(y) {};
-    void draw(HDC hdc) override;
+    //ch_text(std::string c, int x, int y) : str(c), x(x), y(y) {};
+    //void draw(HDC hdc) override;
 };
 
 class ch_window {
