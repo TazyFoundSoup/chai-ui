@@ -247,9 +247,6 @@ void ch_window::DiscardDeviceResource() {
     // boom 💥
 }
 
-HRESULT ch_window::OnRender() {
-    return E_NOTIMPL;
-}
 
 void ch_window::OnResize(UINT width, UINT height) {
 

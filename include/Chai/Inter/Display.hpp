@@ -205,8 +205,6 @@ private:
     void DiscardDeviceResource();
 
 
-    HRESULT OnRender();
-
     void OnResize(UINT width, UINT height);
 };
 
