@@ -247,14 +247,6 @@ void ch_window::DiscardDeviceResource() {
     // boom 💥
 }
 
-HRESULT ch_window::OnRender() {
-    return E_NOTIMPL;
-}
-
-void ch_window::OnResize(UINT width, UINT height) {
-
-}
-
 
 
 ID2D1SolidColorBrush* ch_window::ch_brush_manager::poof(D2D1_COLOR_F color) {
