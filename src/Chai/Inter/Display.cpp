@@ -81,6 +81,8 @@ HRESULT ch_window::create() {
 
         ShowWindow(hwnd, SW_SHOW);
         UpdateWindow(hwnd);
+    } else {
+        throw std::runtime_error("Failed to create device independent resources");
     }
 
     return hr;
@@ -197,7 +199,7 @@ LRESULT CALLBACK ch_window::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPAR
 }
 
 HRESULT ch_window::CreateDeviceIndependentResources() {
-    return E_NOTIMPL;
+    return D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &m_pDirect2dFactory);
 }
 
 HRESULT ch_window::CreateDeviceDependentResources() {
