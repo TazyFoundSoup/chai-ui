@@ -1,5 +1,5 @@
 /****************************************************************************/
-/*                       chai-ui - A small c++ ui library                   */
+/*                       Chai-ui - A small c++ ui library                   */
 /*                                                                          */
 /*  Licensed under the MIT License. See LICENSE file in the project root.   */
 /*                                                                          */
@@ -8,8 +8,8 @@
 #include "Chai/Inter/Display.hpp"
 #include "Display.hpp"
 
-namespace chai {
-namespace internal {
+namespace Chai {
+namespace Internal {
 
 void ch_rect::draw(HDC hdc) {
     // TODO: d2d1 conv
@@ -30,7 +30,7 @@ void ch_text::draw(HDC hdc) {
 void ch_window::dbg_out(const std::string& msg) {
     if (!dbgEnabled) return;
 
-    std::string output = "[chai-ui] " + msg + "\n";
+    std::string output = "[Chai-ui] " + msg + "\n";
     std::cout << output;                 // Console if attached
     OutputDebugStringA(output.c_str());  // IDE/DebugView if no console
 }
@@ -41,7 +41,7 @@ HRESULT ch_window::create() {
     hr = CreateDeviceIndependentResources();
     
     if (SUCCEEDED(hr)) {
-        sprintf(className, "chai-ui-%lu", GetCurrentProcessId());
+        sprintf(className, "Chai-ui-%lu", GetCurrentProcessId());
 
         wc = {};
         wc.lpfnWndProc = WindowProc;
@@ -245,5 +245,5 @@ uint32_t ch_window::ch_brush_manager::hashclr(D2D1_COLOR_F c) {
     // Return in hash format
     return (r << 24) | (g << 16) | (b << 8) | a;
 }
-} // internal
-} // chai
+} // Internal
+} // Chai

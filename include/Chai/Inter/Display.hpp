@@ -1,5 +1,5 @@
 /****************************************************************************/
-/*                       chai-ui - A small c++ ui library                   */
+/*                       Chai-ui - A small c++ ui library                   */
 /*                                                                          */
 /*  Licensed under the MIT License. See LICENSE file in the project root.   */
 /*                                                                          */
@@ -65,8 +65,8 @@ EXTERN_C IMAGE_DOS_HEADER __ImageBase;
 #define DBG_OFF DISABLE
 
 
-namespace chai {
-namespace internal {
+namespace Chai {
+namespace Internal {
 
 struct ch_event {
     enum class type {
@@ -156,7 +156,7 @@ private:
     class ch_brush_manager {
     // Here's a quick explanation
     // In windows you need to make a brush for every colour.
-    // And since chai-ui is a header, it needs to have lots of colours.
+    // And since Chai-ui is a header, it needs to have lots of colours.
     // So there's a cache for brushes.
     public:
         ch_brush_manager(ID2D1HwndRenderTarget* rt) : m_pRenderTarget(rt){}
@@ -210,8 +210,8 @@ private:
     void OnResize(UINT width, UINT height);
 };
 
-} // internal
-} // chai
+} // Internal
+} // Chai
 
 #endif // CHAI_INTERNAL_DISPLAY_H_
 
