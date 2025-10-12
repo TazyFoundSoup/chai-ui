@@ -111,15 +111,17 @@ public:
         : title(t), width(w), height(h), dbgEnabled(d),
         m_pDirect2dFactory(nullptr),
         m_pRenderTarget(nullptr),
-        brush_manager(m_pRenderTarget)
-    {
-        create();
-        if (dbgEnabled) {
-            dbg_out("Debugging enabled for window");
-        }
+        brush_manager(m_pRenderTarget) {
+            create();
+            if (dbgEnabled) {
+                dbg_out("Debugging enabled for window");
+            }
     }
     ~ch_window() {
         UnregisterClassA(className, wc.hInstance);
+        SafeRelease(&m_pDirect2dFactory);
+        SafeRelease(&m_pRenderTarget);
+        free(&brush_manager);
     }
 
     // Functions for debugging
