@@ -24,5 +24,6 @@ cl.exe /EHsc main.cpp ChaiUI.lib /Iinclude /link /subsystem:windows d2d1.lib dwr
 - Link the required Windows/Direct2D libraries
 
 
-[ver]: https://img.shields.io/badge/version-v0.1.0-blue
+[ver]: https://img.shields.io/badge/version-C0.1.R0-blue
 [releases]: https://github.com/TazyFoundSoup/chai-ui/releases/latest
+
