@@ -203,11 +203,49 @@ HRESULT ch_window::CreateDeviceIndependentResources() {
 }
 
 HRESULT ch_window::CreateDeviceDependentResources() {
-    return E_NOTIMPL;
+    // Stupid scope things
+    HRESULT hr = S_OK;
+    // We actually need to check if the render target has already been
+    // made so it doesn't freak out.
+    if (!m_pRenderTarget) {
+        // This is just to get the size of the window so we can create
+        // the render target.
+        // kinda curious what happens if i do another size...
+        RECT rc;
+        GetClientRect(hwnd, &rc);
+
+        D2D1_SIZE_U size = D2D1::SizeU(
+            rc.right - rc.left,
+            rc.bottom - rc.top
+        );
+
+        HRESULT hr = m_pDirect2dFactory->CreateHwndRenderTarget(
+            D2D1::RenderTargetProperties(),
+            D2D1::HwndRenderTargetProperties(
+                hwnd,
+                size
+            ),
+            &m_pRenderTarget
+        );
+
+        if (SUCCEEDED(hr)) {
+            // Now we can create the brush manager
+            // And I'm not going to rant about why
+            // windows works like it's supposed to
+            // but hey, i'm grateful i get to eat
+            // food every night under a roof.
+            // thanks mum and dad <3
+            brush_manager = ch_brush_manager(m_pRenderTarget);
+        }
+    } 
+
+    return hr;
 }
 
 void ch_window::DiscardDeviceResource() {
-
+    SafeRelease(&m_pRenderTarget);
+    // Brush manager will just explode itself
+    // boom 💥
 }
 
 HRESULT ch_window::OnRender() {
