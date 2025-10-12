@@ -121,7 +121,7 @@ public:
         UnregisterClassA(className, wc.hInstance);
         SafeRelease(&m_pDirect2dFactory);
         SafeRelease(&m_pRenderTarget);
-        free(&brush_manager);
+        // Brush manager automatically frees itself
     }
 
     // Functions for debugging
@@ -150,7 +150,10 @@ private:
     public:
         ch_brush_manager(ID2D1HwndRenderTarget* rt) : m_pRenderTarget(rt){}
         ~ch_brush_manager() {
-            // TODO: Release all brushes in the cache
+            for (auto& pr : brush_cache) {
+                SafeRelease(&pr.second);
+            }
+            brush_cache.clear();
         }
         // This is just get it from the cache if it exists
         // or create it if it doesn't
