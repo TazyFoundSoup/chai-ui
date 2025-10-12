@@ -219,7 +219,7 @@ HRESULT ch_window::CreateDeviceDependentResources() {
             rc.bottom - rc.top
         );
 
-        HRESULT hr = m_pDirect2dFactory->CreateHwndRenderTarget(
+        hr = m_pDirect2dFactory->CreateHwndRenderTarget(
             D2D1::RenderTargetProperties(),
             D2D1::HwndRenderTargetProperties(
                 hwnd,
