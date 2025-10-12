@@ -8,4 +8,21 @@ A **cozy and modern** UI and windowing engine.
 
 Chai-ui is a Windows only UI and windowing library with the goal to have minimum stress and maximum debuggability.
 
+## To use
+Visit the [releases][releases] page and download the `.lib` file attached.
+
+When compiling your application, make sure to link the file. For example:
+
+```cmd
+cl.exe /EHsc main.cpp ChaiUI.lib /Iinclude /link /subsystem:windows d2d1.lib dwrite.lib ole32.lib uuid.lib gdi32.lib user32.lib
+````
+
+
+- `main.cpp` → your source  
+- `ChaiUI.lib` → the static library you downloaded  
+- `/Iinclude` → points to the header files  
+- Link the required Windows/Direct2D libraries
+
+
 [ver]: https://img.shields.io/badge/version-v0.1.0-blue
+[releases]: https://github.com/TazyFoundSoup/chai-ui/releases/latest
