@@ -6,7 +6,6 @@
 /****************************************************************************/
 
 #include "Chai/Inter/Display.hpp"
-#include "Display.hpp"
 
 namespace Chai {
 namespace Internal {
