@@ -6,12 +6,14 @@
 /****************************************************************************/
 
 #include "Chai/Inter/Display.hpp"
+#include "Display.hpp"
 
 namespace Chai {
 namespace Internal {
 
-void Chai::Internal::ch_rect::draw(ID2D1RenderTarget &rt, D2D1_COLOR_F) {
-    
+void ch_rect::draw(ch_window &win) {
+    ID2D1SolidColorBrush* brush = win.brush_manager.poof(this->color);
+    win.m_pRenderTarget->FillRectangle(this->rect, brush);
 }
 
 void ch_text::draw(HDC hdc) {
@@ -273,5 +275,7 @@ uint32_t ch_window::ch_brush_manager::hashclr(D2D1_COLOR_F c) {
     // Return in hash format
     return (r << 24) | (g << 16) | (b << 8) | a;
 }
-} // Internal
+}
+
+// Internal
 } // Chai

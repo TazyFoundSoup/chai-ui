@@ -96,16 +96,22 @@ struct ch_drawable {
 };
 
 struct ch_rect : public ch_drawable {
-    RECT rect;
-    COLORREF color;
+    D2D1_RECT_F rect;
+    D2D1_COLOR_F color;
 
-    ch_rect(int x1, int y1, int x2, int y2, COLORREF c) {
-    rect = {x1, y1, x2, y2};
-    color = c;
+    ch_rect(int x1, int y1, int x2, int y2, D2D1_COLOR_F c) {
+        rect = D2D1::RectF(
+            static_cast<FLOAT>(x1),
+            static_cast<FLOAT>(y1),
+            static_cast<FLOAT>(x2),
+            static_cast<FLOAT>(y2)
+        );
+        color = c;
     }
 
-    void draw(ID2D1RenderTarget& rt, D2D1_COLOR_F);
+    void draw(ch_window& win);
 };
+
 
 struct ch_text : public ch_drawable {
     // I still need to learn dwrite so this may take a bit
