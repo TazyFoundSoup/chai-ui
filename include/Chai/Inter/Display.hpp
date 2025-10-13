@@ -136,22 +136,6 @@ public:
         // Brush manager automatically frees itself
     }
 
-    // Functions for debugging
-    void dbg_out(const std::string& msg);
-
-    HRESULT create();
-    void destroy();
-    void run();
-    void draw(std::unique_ptr<ch_drawable> drawable);
-    bool poll_event(ch_event& event);
-
-    // Setters for window properties
-    void set_icon(std::string iconPath);
-
-private:
-    // Note for contributers
-    // Private is going to be in camelCase but public is going to be in snake_case
-    // This is just for debugging, but try to keep in case
 
     // Inner classes have to go ahead because C++ is stupid and is top to bottom
     class ch_brush_manager {
@@ -182,6 +166,30 @@ private:
         ID2D1HwndRenderTarget* m_pRenderTarget;
     };
 
+    // Functions for debugging
+    void dbg_out(const std::string& msg);
+
+    HRESULT create();
+    void destroy();
+    void run();
+    void draw(std::unique_ptr<ch_drawable> drawable);
+    bool poll_event(ch_event& event);
+
+    // Setters for window properties
+    void set_icon(std::string iconPath);
+
+    // Members
+    
+    // D2D1 requirements
+    ID2D1Factory* m_pDirect2dFactory;
+    ID2D1HwndRenderTarget* m_pRenderTarget;
+    ch_brush_manager brush_manager;
+
+private:
+    // Note for contributers
+    // Private is going to be in camelCase but public is going to be in snake_case
+    // This is just for debugging, but try to keep in case
+
     bool dbgEnabled = false;
 
     char className[64];
@@ -194,10 +202,6 @@ private:
     HWND hwnd;
     static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-    // D2D1 requirements
-    ID2D1Factory* m_pDirect2dFactory;
-    ID2D1HwndRenderTarget* m_pRenderTarget;
-    ch_brush_manager brush_manager;
 
     // Resource related functions
     HRESULT CreateDeviceIndependentResources();
