@@ -1,0 +1,23 @@
+/* 
+
+    WARNING:
+    This will not work (on most machines).
+    To make it work, open the vs console and run code .
+    Then this will work
+
+*/
+
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build Example",
+      "type": "shell",
+      "command": "cl.exe /EHsc example\\main.cpp ChaiUI.lib /Iinclude /link /subsystem:windows d2d1.lib dwrite.lib ole32.lib uuid.lib gdi32.lib user32.lib",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    }
+  ]
+}
