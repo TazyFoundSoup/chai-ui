@@ -1,0 +1,51 @@
+name: CI (Windows - cl.exe)
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-test:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download latest ChaiUI.lib
+        shell: pwsh
+        run: |
+          $repo = "${{ github.repository }}"
+          $releases = Invoke-RestMethod -Uri "https://api.github.com/repos/$repo/releases/latest"
+          $asset = $releases.assets | Where-Object { $_.name -ieq "ChaiUI.lib" }
+          if (-not $asset) { throw "Could not find ChaiUI.lib in latest release assets." }
+          Invoke-WebRequest -Uri $asset.browser_download_url -OutFile "ChaiUI.lib"
+
+      - name: Set up MSVC environment
+        shell: pwsh
+        run: |
+          $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+          $vsInstallPath = & $vswhere -latest -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
+          if (-not $vsInstallPath) { throw "VS installation not found." }
+          $vcvars = Join-Path $vsInstallPath "VC\Auxiliary\Build\vcvars64.bat"
+          cmd /c "`"$vcvars`" && set" > msvc_env.txt
+          Get-Content msvc_env.txt | ForEach-Object {
+            $name,$value = $_ -split '=',2
+            if ($name -and $value) {
+              [System.Environment]::SetEnvironmentVariable($name, $value)
+            }
+          }
+
+      - name: Compile test with cl.exe
+        shell: pwsh
+        run: |
+          mkdir build | Out-Null
+          cd build
+          cl.exe /nologo /EHsc ..\tests\hello_window.cpp ..\ChaiUI.lib /I..\include /link /subsystem:windows d2d1.lib dwrite.lib ole32.lib uuid.lib gdi32.lib user32.lib
+
+      - name: Verify artifact exists
+        shell: pwsh
+        run: |
+          if (-not (Test-Path "build\hello_window.exe")) {
+            throw "Build did not produce hello_window.exe"
+          }
