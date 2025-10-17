@@ -12,14 +12,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Download latest ChaiUI.lib from upstream
+      - name: Download latest .lib from upstream
         shell: pwsh
         run: |
           $upstream = "TazyFoundSoup/chai-ui"
           $releases = Invoke-RestMethod -Uri "https://api.github.com/repos/$upstream/releases/latest"
-          $asset = $releases.assets | Where-Object { $_.name -ieq "ChaiUI.lib" }
-          if (-not $asset) { throw "Could not find ChaiUI.lib in latest release assets of $upstream." }
-          Invoke-WebRequest -Uri $asset.browser_download_url -OutFile "ChaiUI.lib"
+          $asset = $releases.assets | Where-Object { $_.name -ieq "Chai-ui.lib" }
+          if (-not $asset) {
+            $asset = $releases.assets | Where-Object { $_.name -match '(?i)\.lib$' } | Select-Object -First 1
+          }
+          if (-not $asset) { throw "Could not find any .lib in latest release assets of $upstream." }
+          Invoke-WebRequest -Uri $asset.browser_download_url -OutFile "Chai.lib"
 
       - name: Set up MSVC environment
         shell: pwsh
@@ -41,7 +44,7 @@ jobs:
         run: |
           mkdir build | Out-Null
           cd build
-          cl.exe /nologo /EHsc ..\tests\hello_window.cpp ..\ChaiUI.lib /I..\include /link /subsystem:windows d2d1.lib dwrite.lib ole32.lib uuid.lib gdi32.lib user32.lib
+          cl.exe /nologo /EHsc ..\tests\hello_window.cpp ..\Chai.lib /I..\include /link /subsystem:windows d2d1.lib dwrite.lib ole32.lib uuid.lib gdi32.lib user32.lib
 
       - name: Verify artifact exists
         shell: pwsh
