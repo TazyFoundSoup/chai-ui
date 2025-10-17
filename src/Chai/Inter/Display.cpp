@@ -11,12 +11,12 @@
 namespace Chai {
 namespace Internal {
 
-void ch_rect::draw(ch_window &win) {
+void ch_rect::draw(ch_window& win) {
     ID2D1SolidColorBrush* brush = win.brush_manager.poof(this->color);
     win.m_pRenderTarget->FillRectangle(this->rect, brush);
 }
 
-void ch_text::draw(HDC hdc) {
+void ch_text::draw(ch_window& win) {
     // TODO: dwrite conv
     //COLORREF oldColor = SetTextColor(hdc, RGB(0, 0, 0)); // Black text
     //TextOutA(hdc, x, y, str.c_str(), (int)str.length());

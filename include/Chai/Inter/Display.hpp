@@ -90,12 +90,14 @@ struct ch_event {
     };
 };
 
-struct ch_drawable {
+class ch_drawable {
+public:
     virtual void draw(ID2D1RenderTarget& rt) = 0;
     virtual ~ch_drawable() {}
 };
 
-struct ch_rect : public ch_drawable {
+class ch_rect : public ch_drawable {
+public:
     D2D1_RECT_F rect;
     D2D1_COLOR_F color;
 
@@ -113,15 +115,27 @@ struct ch_rect : public ch_drawable {
 };
 
 
-struct ch_text : public ch_drawable {
-    // I still need to learn dwrite so this may take a bit
-    //std::string str;
-    //int x, y;
+class ch_text : public ch_drawable {
+public:
+    ch_text(const wchar_t* c) : cont(c) {
+        contLen = wcslen(cont);
+        // if only windows actually made this helpful instead
+        // of the most unreadable line of code
+    }
+
+    const wchar_t* cont;
     
-    // Most unreable code award goes to the line below this comment
-    //ch_text(std::string c, int x, int y) : str(c), x(x), y(y) {};
-    //void draw(HDC hdc) override;
+    
+    void draw(ch_window& win);
+private:
+    
+    UINT32 contLen;
+
+    // Dwrite members
+    IDWriteFactory* pDWriteFactory_;
+    IDWriteTextFormat* pTextFormat_;
 };
+
 
 class ch_window {
 public:
