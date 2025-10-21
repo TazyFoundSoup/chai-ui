@@ -17,13 +17,43 @@ void ch_rect::draw(ch_window& win) {
 }
 
 void ch_text::draw(ch_window& win) {
-    // TODO: dwrite conv
-    //COLORREF oldColor = SetTextColor(hdc, RGB(0, 0, 0)); // Black text
-    //TextOutA(hdc, x, y, str.c_str(), (int)str.length());
-    //SetTextColor(hdc, oldColor); // Restore old color
+    ID2D1SolidColorBrush* brush = win.brush_manager.poof(this->conf.color);
+
+    win.m_pRenderTarget->DrawTextW(
+        this->cont,
+        this->contLen,
+        pTextFormat_,
+        D2D1::RectF(0.0f, 0.0f, 600.0f, 400.0f), // TODO: Make this configurable
+        brush
+    );
 }
 
+HRESULT ch_text::CreateDWriteResources() {
+    // Note: Since when ch_text is made it takes
+    // a ch_window, the window already has the factory
+    // and all the other resources. so we'll just use those
 
+    HRESULT hr = DWriteCreateFactory(
+        DWRITE_FACTORY_TYPE_SHARED,
+        __uuidof(IDWriteFactory),
+        reinterpret_cast<IUnknown**>(&pDWriteFactory_)
+    );
+
+    if (SUCCEEDED(hr)) {
+        hr = pDWriteFactory_->CreateTextFormat(
+            conf.fontFamily,                // Font family name
+            NULL,
+            DWRITE_FONT_WEIGHT_NORMAL,
+            DWRITE_FONT_STYLE_NORMAL,
+            DWRITE_FONT_STRETCH_NORMAL,
+            conf.fontSize,                      // Font size
+            conf.locale,                   // Locale
+            &pTextFormat_
+        );
+    }
+
+    return hr;
+}
 
 void ch_window::dbg_out(const std::string& msg) {
     if (!dbgEnabled) return;

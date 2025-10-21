@@ -90,9 +90,16 @@ struct ch_event {
     };
 };
 
+typedef struct {
+    const WCHAR* fontFamily = L"Segoe UI";
+    FLOAT fontSize = 12.0f;
+    D2D1_COLOR_F color = D2D1::ColorF(D2D1::ColorF::Black);
+    const WCHAR* locale = L"en-us";
+} ch_text_conf;
+
 class ch_drawable {
 public:
-    virtual void draw(ID2D1RenderTarget& rt) = 0;
+    virtual void draw(ch_window& win) = 0;
     virtual ~ch_drawable() {}
 };
 
@@ -116,18 +123,22 @@ public:
 
 
 class ch_text : public ch_drawable {
+// Warning:
+// Since text is complex, it needs it's own functions
+// for stuffffffffffffffffffffffffffffffffffffffffff
 public:
-    ch_text(const wchar_t* c) : cont(c) {
-        contLen = wcslen(cont);
-        // if only windows actually made this helpful instead
-        // of the most unreadable line of code
+    ch_text(const wchar_t* c, const ch_text_conf config) : cont(c), conf(config) {
+        contLen = (UINT32) wcslen(cont);
+        CreateDWriteResources();
     }
 
     const wchar_t* cont;
-    
+    const ch_text_conf conf = ch_text_conf();
     
     void draw(ch_window& win);
 private:
+    // I just realised I called it resources and not resource
+    HRESULT CreateDWriteResources();
     
     UINT32 contLen;
 
