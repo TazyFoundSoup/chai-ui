@@ -99,7 +99,7 @@ typedef struct {
 
 class ch_drawable {
 public:
-    virtual void draw(Chai::Internal::ch_window& win) = 0;
+    virtual void draw(::Chai::Internal::ch_window& win) = 0;
     virtual ~ch_drawable() {}
 };
 
@@ -118,7 +118,7 @@ public:
         color = c;
     }
 
-    void draw(Chai::Internal::ch_window& win);
+    void draw(::Chai::Internal::ch_window& win);
 };
 
 
@@ -135,7 +135,7 @@ public:
     const wchar_t* cont;
     const ch_text_conf conf = ch_text_conf();
     
-    void draw(Chai::Internal::ch_window& win);
+    void draw(::Chai::Internal::ch_window& win);
 private:
     // I just realised I called it resources and not resource
     HRESULT CreateDWriteResources();
