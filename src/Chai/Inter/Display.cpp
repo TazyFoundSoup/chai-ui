@@ -216,7 +216,13 @@ LRESULT CALLBACK ch_window::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPAR
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hwnd, &ps);
 
-            // TODO: Iterate over drawList to draw objects
+            ch_window* window = reinterpret_cast<ch_window*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
+            for (auto& drawable : window->drawList) {
+                auto* window = reinterpret_cast<ch_window*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
+                if (window) {
+                    drawable->draw(*window);
+                }
+            }
 
             EndPaint(hwnd, &ps);
             return 0;
