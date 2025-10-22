@@ -1,2 +1,3 @@
-g++ example/main.cpp src/Chai/Inter/Display.cpp -Iinclude -o example.exe -mwindows -ld2d1 -ldwrite -lole32 -luuid -lgdi32 -luser32
-main.exe
+cl /c /EHsc src\Chai\Inter\Display.cpp /Iinclude /Iinclude\Chai\Inter
+lib Display.obj /OUT:ChaiUI.lib
+echo ChaiUI.lib is now located in the current directory

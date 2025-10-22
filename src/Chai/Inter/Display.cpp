@@ -19,7 +19,7 @@ void ch_rect::draw(ch_window& win) {
 void ch_text::draw(ch_window& win) {
     ID2D1SolidColorBrush* brush = win.brush_manager.poof(this->conf.color);
 
-    win.m_pRenderTarget->DrawTextW(
+    win.m_pRenderTarget->DrawText(
         this->cont,
         this->contLen,
         pTextFormat_,
