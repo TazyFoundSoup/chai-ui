@@ -102,6 +102,8 @@ struct ch_text_conf {
 class ch_drawable {
 public:
     virtual void draw(ch_window& win) = 0;
+    virtual void setpos(int x, int y) = 0;
+    virtual void move(int offx, int offy) = 0;
     virtual ~ch_drawable() {}
 };
 
@@ -121,6 +123,8 @@ public:
     }
 
     void draw(ch_window& win) override;
+    virtual void setpos(int x, int y) override;
+    virtual void move(int offx, int offy) override;
 };
 
 
@@ -138,6 +142,8 @@ public:
     const ch_text_conf conf = ch_text_conf();
     
     void draw(ch_window& win) override;
+    virtual void setpos(int x, int y) = 0;
+    virtual void move(int offx, int offy) = 0;
 private:
     // I just realised I called it resources and not resource
     HRESULT CreateDWriteResources();
