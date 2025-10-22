@@ -5,7 +5,7 @@
       "name": "Run Example Program",
       "type": "cppvsdbg",
       "request": "launch",
-      "program": "${workspaceFolder}\\example.exe",
+      "program": "${workspaceFolder}\\main.exe",
       "preLaunchTask": "Build Example",
       "cwd": "${workspaceFolder}"
     }
