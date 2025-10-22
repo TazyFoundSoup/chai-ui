@@ -315,10 +315,5 @@ uint32_t ch_window::ch_brush_manager::hashclr(D2D1_COLOR_F c) {
 }
 }
 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
-{
-    return main();
-}
-
 // Internal
 } // Chai
