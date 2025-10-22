@@ -5,4 +5,4 @@ int main(void) {
     Chai::Internal::ch_rect rectangle(100, 100, 300, 300, D2D1::ColorF(D2D1::ColorF::Blue));
     win.draw(std::make_unique<Chai::Internal::ch_rect>(rectangle));
     win.run();
-}
+}     

@@ -68,6 +68,8 @@ EXTERN_C IMAGE_DOS_HEADER __ImageBase;
 namespace Chai {
 namespace Internal {
 
+class ch_window; // We need forward declaration :((((((
+
 struct ch_event {
     enum class type {
         none,
@@ -90,16 +92,16 @@ struct ch_event {
     };
 };
 
-typedef struct {
+struct ch_text_conf {
     const WCHAR* fontFamily = L"Segoe UI";
     FLOAT fontSize = 12.0f;
     D2D1_COLOR_F color = D2D1::ColorF(D2D1::ColorF::Black);
     const WCHAR* locale = L"en-us";
-} ch_text_conf;
+};
 
 class ch_drawable {
 public:
-    virtual void draw(::Chai::Internal::ch_window& win) = 0;
+    virtual void draw(ch_window& win) = 0;
     virtual ~ch_drawable() {}
 };
 
@@ -118,7 +120,7 @@ public:
         color = c;
     }
 
-    void draw(::Chai::Internal::ch_window& win);
+    void draw(ch_window& win) override;
 };
 
 
@@ -135,7 +137,7 @@ public:
     const wchar_t* cont;
     const ch_text_conf conf = ch_text_conf();
     
-    void draw(::Chai::Internal::ch_window& win);
+    void draw(ch_window& win) override;
 private:
     // I just realised I called it resources and not resource
     HRESULT CreateDWriteResources();
