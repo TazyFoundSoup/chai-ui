@@ -133,17 +133,18 @@ class ch_text : public ch_drawable {
 // Since text is complex, it needs it's own functions
 // for stuffffffffffffffffffffffffffffffffffffffffff
 public:
-    ch_text(const wchar_t* c, const ch_text_conf config) : cont(c), conf(config) {
+    ch_text(const wchar_t* c, const ch_text_conf config, const D2D1_RECT_F rect) : cont(c), conf(config), rect(rect) {
         contLen = (UINT32) wcslen(cont);
         CreateDWriteResources();
     }
 
     const wchar_t* cont;
     const ch_text_conf conf = ch_text_conf();
+    D2D1_RECT_F rect;
     
     void draw(ch_window& win) override;
-    virtual void setpos(int x, int y) = 0;
-    virtual void move(int offx, int offy) = 0;
+    virtual void setpos(int x, int y) override;
+    virtual void move(int offx, int offy) override;
 private:
     // I just realised I called it resources and not resource
     HRESULT CreateDWriteResources();

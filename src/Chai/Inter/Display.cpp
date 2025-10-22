@@ -18,16 +18,52 @@ void ch_rect::draw(ch_window& win) {
     win.m_pRenderTarget->FillRectangle(this->rect, brush);
 }
 
+void ch_rect::setpos(int x, int y) {
+    this->rect.left = static_cast<FLOAT>(x);
+    this->rect.top = static_cast<FLOAT>(y);
+    this->rect.right = static_cast<FLOAT>(x) + (this->rect.right - this->rect.left);
+    this->rect.bottom = static_cast<FLOAT>(y) + (this->rect.bottom - this->rect.top);
+
+    InvalidateRect(NULL, NULL, FALSE);
+}
+
+void ch_rect::move(int offx, int offy){
+    this->rect.left += static_cast<FLOAT>(offx);
+    this->rect.top += static_cast<FLOAT>(offy);
+    this->rect.right += static_cast<FLOAT>(offx) + (this->rect.right - this->rect.left);
+    this->rect.bottom += static_cast<FLOAT>(offy) + (this->rect.bottom - this->rect.top);
+
+    InvalidateRect(NULL, NULL, FALSE);
+}
+
 void ch_text::draw(ch_window& win) {
     ID2D1SolidColorBrush* brush = win.brush_manager.poof(this->conf.color);
 
     win.m_pRenderTarget->DrawText(
-        this->cont,
-        this->contLen,
+        reinterpret_cast<const WCHAR*>(this->cont),
+        static_cast<UINT32>(this->contLen),
         pTextFormat_,
-        D2D1::RectF(0.0f, 0.0f, 600.0f, 400.0f), // TODO: Make this configurable
+        rect,
         brush
     );
+}
+
+void ch_text::setpos(int x, int y) {
+    this->rect.left = static_cast<FLOAT>(x);
+    this->rect.top = static_cast<FLOAT>(y);
+    this->rect.right = static_cast<FLOAT>(x) + (this->rect.right - this->rect.left);
+    this->rect.bottom = static_cast<FLOAT>(y) + (this->rect.bottom - this->rect.top);
+
+    InvalidateRect(NULL, NULL, FALSE);
+}
+
+void ch_text::move(int offx, int offy){
+    this->rect.left += static_cast<FLOAT>(offx);
+    this->rect.top += static_cast<FLOAT>(offy);
+    this->rect.right += static_cast<FLOAT>(offx) + (this->rect.right - this->rect.left);
+    this->rect.bottom += static_cast<FLOAT>(offy) + (this->rect.bottom - this->rect.top);
+
+    InvalidateRect(NULL, NULL, FALSE);
 }
 
 HRESULT ch_text::CreateDWriteResources() {
