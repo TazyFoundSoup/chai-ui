@@ -77,18 +77,19 @@ HRESULT ch_window::create() {
         wc.lpfnWndProc = WindowProc;
         wc.hInstance = GetModuleHandle(NULL);
         wc.lpszClassName = className;
+        wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+        wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
 
-        if (!GetClassInfoA(wc.hInstance, className, &wc)) {
-            if (!RegisterClassA(&wc)) {
-                throw std::runtime_error("Failed to register window class");
-            }
+        if (!RegisterClassA(&wc)) {
+            DWORD err = GetLastError();
+            throw std::runtime_error("RegisterClassA failed, code: " + std::to_string(err));
         }
         dbg_out("Window class registered: " + std::string(className));
 
         hwnd = CreateWindowExA(
             0, className, title.c_str(), WS_OVERLAPPEDWINDOW,
             CW_USEDEFAULT, CW_USEDEFAULT, width, height,
-            NULL, NULL, wc.hInstance, NULL
+            NULL, NULL, wc.hInstance, this
         );
 
         dbg_out("Window created with properties: " + title + 
@@ -138,6 +139,7 @@ void ch_window::run() {
 
 void ch_window::draw(std::unique_ptr<ch_drawable> drawable) {
     drawList.push_back(std::move(drawable));
+    InvalidateRect(hwnd, NULL, FALSE); // Trigger a repaint
 }
 
 bool ch_window::poll_event(ch_event& event) {
@@ -210,29 +212,49 @@ void ch_window::set_icon(std::string iconPath) {
 }
 
 LRESULT CALLBACK ch_window::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+
+    if (uMsg == WM_NCCREATE) {
+        CREATESTRUCT* cs = reinterpret_cast<CREATESTRUCT*>(lParam);
+        ch_window* window = reinterpret_cast<ch_window*>(cs->lpCreateParams);
+        SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(window));
+        return DefWindowProc(hwnd, uMsg, wParam, lParam);
+    }
+
+    ch_window* window = reinterpret_cast<ch_window*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
+
+
     switch (uMsg) {
         case WM_DESTROY:
             PostQuitMessage(0);
             return 0;
+
         case WM_PAINT: {
-            PAINTSTRUCT ps;
-            HDC hdc = BeginPaint(hwnd, &ps);
-
-            ch_window* window = reinterpret_cast<ch_window*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
-            for (auto& drawable : window->drawList) {
-                auto* window = reinterpret_cast<ch_window*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
-                if (window) {
-                    drawable->draw(*window);
-                }
+            if (!window->m_pRenderTarget) {
+                window->CreateDeviceDependentResources();
             }
+            if (window && window->m_pRenderTarget) {
+                PAINTSTRUCT ps;
+                BeginPaint(hwnd, &ps);
 
-            EndPaint(hwnd, &ps);
+                window->m_pRenderTarget->BeginDraw();
+                window->m_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
+                window->m_pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::White));
+
+                for (auto& drawable : window->drawList) {
+                    if(drawable) drawable->draw(*window);
+                    if (window) window->dbg_out("Drew drawable in window: " + window->title + ", type: " + typeid(*drawable).name());
+                }
+
+                window->m_pRenderTarget->EndDraw();
+                EndPaint(hwnd, &ps);
+            }
             return 0;
         }
     }
-    
+
     return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
+
 
 HRESULT ch_window::CreateDeviceIndependentResources() {
     return D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &m_pDirect2dFactory);
