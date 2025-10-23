@@ -1,7 +1,7 @@
 # Chai-ui
 A **cozy and modern** UI and windowing engine.
 
-![Version | v0.1.0][ver]
+![Version | v1.0.0][ver]
 
  ---
  > Warning: Chai-ui is still in alpha stages
@@ -24,6 +24,6 @@ cl.exe /EHsc main.cpp ChaiUI.lib /Iinclude /link /subsystem:windows d2d1.lib dwr
 - Link the required Windows/Direct2D libraries
 
 
-[ver]: https://img.shields.io/badge/version-C0.1.R0-blue
+[ver]: https://img.shields.io/badge/version-C1.0.R0-blue
 [releases]: https://github.com/TazyFoundSoup/chai-ui/releases/latest
 
