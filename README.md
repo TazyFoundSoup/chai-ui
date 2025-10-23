@@ -9,6 +9,9 @@ A **cozy and modern** UI and windowing engine.
 Chai-ui is a Windows only UI and windowing library with the goal to have minimum stress and maximum debuggability.
 
 ## To use
+
+**Make sure you have the following requirements: Windows + MSVC + Direct2D/DirectWrite libraries**
+
 Visit the [releases][releases] page and download the `.lib` file attached.
 
 When compiling your application, make sure to link the file. For example:
