@@ -10,6 +10,8 @@ Chai-ui is a Windows only UI and windowing library with the goal to have minimum
 
 ## To use
 
+> For a full in-depth guide of chai-ui, check out [the documentation.][docs]
+
 **Make sure you have the following requirements: Windows + MSVC + Direct2D/DirectWrite libraries**
 
 Visit the [releases][releases] page and download the `.lib` file attached.
@@ -29,4 +31,4 @@ cl.exe /EHsc main.cpp ChaiUI.lib /Iinclude /link /subsystem:windows d2d1.lib dwr
 
 [ver]: https://img.shields.io/badge/version-C1.0.R0-blue
 [releases]: https://github.com/TazyFoundSoup/chai-ui/releases/latest
-
+[docs]: https://github.com/TazyFoundSoup/chai-ui/tree/main/docs
