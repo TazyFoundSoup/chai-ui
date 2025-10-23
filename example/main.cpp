@@ -5,10 +5,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     ch_window window("Chai Example", 800, 600, DBG_ON);
 
     // make drawables
-    auto rect = std::make_unique<ch_rect>(100, 100, 300, 200, D2D1::ColorF(D2D1::ColorF::Red));
+    auto rect = std::make_unique<ch_rect>(100, 100, 300, 200, D2D1::ColorF(D2D1::ColorF::Yellow));
     auto text = std::make_unique<ch_text>(
-        L"lulcat.dll", 
-        ch_text_conf{ L"Inter", 24.0f, D2D1::ColorF(D2D1::ColorF::Black), L"en-us" }, 
+        L"this is some text. it's cool ig ngl idk :3", 
+        ch_text_conf{ L"Inter", 24.0f, D2D1::ColorF(D2D1::ColorF::Green), L"en-us" }, 
         D2D1::RectF(50, 50, 400, 100)
     );
 
