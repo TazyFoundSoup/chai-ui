@@ -101,6 +101,7 @@ struct ch_text_conf {
 
 class ch_drawable {
 public:
+    ch_window* owner = nullptr;
     virtual void draw(ch_window& win) = 0;
     virtual void setpos(int x, int y) = 0;
     virtual void move(int offx, int offy) = 0;
@@ -214,6 +215,8 @@ public:
     void run();
     void draw(std::unique_ptr<ch_drawable> drawable);
     bool poll_event(ch_event& event);
+
+    void invalidate();
 
     // Setters for window properties
     void set_icon(std::string iconPath);

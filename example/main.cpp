@@ -1,14 +1,20 @@
 #include "Chai/Inter/Display.hpp"
+using namespace Chai::Internal;
 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd) {
-    Chai::Internal::ch_window win("Test window", 800, 600, DBG_ON);
-    Chai::Internal::ch_rect rectangle(100, 100, 300, 300, D2D1::ColorF(D2D1::ColorF::Blue));
-    Chai::Internal::ch_text_conf textConf;
-    textConf.fontSize = 24.0f;
-    textConf.color = D2D1::ColorF(D2D1::ColorF::Red);
-    Chai::Internal::ch_text text(L"676767", textConf, D2D1::RectF(50.0f, 50.0f, 400.0f, 200.0f));
-    win.draw(std::make_unique<Chai::Internal::ch_text>(text));
-    win.draw(std::make_unique<Chai::Internal::ch_rect>(rectangle));
-    win.run();
-    text.move(200, 200);
-}     
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
+    ch_window window("Chai Example", 800, 600, DBG_ON);
+
+    // make drawables
+    auto rect = std::make_unique<ch_rect>(100, 100, 300, 200, D2D1::ColorF(D2D1::ColorF::Red));
+    auto text = std::make_unique<ch_text>(
+        L"lulcat.dll", 
+        ch_text_conf{ L"Inter", 24.0f, D2D1::ColorF(D2D1::ColorF::Black), L"en-us" }, 
+        D2D1::RectF(50, 50, 400, 100)
+    );
+
+    window.draw(std::move(rect));
+    window.draw(std::move(text));
+
+    window.run();
+    
+}

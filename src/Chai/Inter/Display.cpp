@@ -24,16 +24,19 @@ void ch_rect::setpos(int x, int y) {
     this->rect.right = static_cast<FLOAT>(x) + (this->rect.right - this->rect.left);
     this->rect.bottom = static_cast<FLOAT>(y) + (this->rect.bottom - this->rect.top);
 
-    InvalidateRect(NULL, NULL, FALSE);
+    if (owner) owner->invalidate();
 }
 
 void ch_rect::move(int offx, int offy){
-    this->rect.left += static_cast<FLOAT>(offx);
-    this->rect.top += static_cast<FLOAT>(offy);
-    this->rect.right += static_cast<FLOAT>(offx) + (this->rect.right - this->rect.left);
-    this->rect.bottom += static_cast<FLOAT>(offy) + (this->rect.bottom - this->rect.top);
+    FLOAT width = rect.right - rect.left;
+    FLOAT height = rect.bottom - rect.top;
 
-    InvalidateRect(NULL, NULL, FALSE);
+    rect.left += offx;
+    rect.top += offy;
+    rect.right = rect.left + width;
+    rect.bottom = rect.top + height;
+
+    if (owner) owner->invalidate();
 }
 
 void ch_text::draw(ch_window& win) {
@@ -54,16 +57,19 @@ void ch_text::setpos(int x, int y) {
     this->rect.right = static_cast<FLOAT>(x) + (this->rect.right - this->rect.left);
     this->rect.bottom = static_cast<FLOAT>(y) + (this->rect.bottom - this->rect.top);
 
-    InvalidateRect(NULL, NULL, FALSE);
+    if (owner) owner->invalidate();
 }
 
 void ch_text::move(int offx, int offy){
-    this->rect.left += static_cast<FLOAT>(offx);
-    this->rect.top += static_cast<FLOAT>(offy);
-    this->rect.right += static_cast<FLOAT>(offx) + (this->rect.right - this->rect.left);
-    this->rect.bottom += static_cast<FLOAT>(offy) + (this->rect.bottom - this->rect.top);
+    FLOAT width = rect.right - rect.left;
+    FLOAT height = rect.bottom - rect.top;
 
-    InvalidateRect(NULL, NULL, FALSE);
+    rect.left += offx;
+    rect.top += offy;
+    rect.right = rect.left + width;
+    rect.bottom = rect.top + height;
+
+    if (owner) owner->invalidate();
 }
 
 HRESULT ch_text::CreateDWriteResources() {
@@ -174,56 +180,51 @@ void ch_window::run() {
 }
 
 void ch_window::draw(std::unique_ptr<ch_drawable> drawable) {
+    drawable->owner = this;
     drawList.push_back(std::move(drawable));
     InvalidateRect(hwnd, NULL, FALSE); // Trigger a repaint
 }
 
 bool ch_window::poll_event(ch_event& event) {
+    event = {};
     MSG msg;
-    event = {}; // Zero out event in case of weird bugs
-    if (PeekMessage(&msg, hwnd, 0, 0, PM_REMOVE)) {
+    while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) { // check the full queue
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
+
         switch (msg.message) {
-            case WM_CLOSE:
-                event.type = ch_event::type::closed;
-                break;
+            case WM_CLOSE: event.type = ch_event::type::closed; return true;
             case WM_KEYDOWN:
                 event.type = ch_event::type::key_down;
                 event.key.keycode = static_cast<int>(msg.wParam);
-                // TODO: Implement repeat logic
                 event.key.repeat = false;
-                break;
+                return true;
             case WM_KEYUP:
                 event.type = ch_event::type::key_up;
                 event.key.keycode = static_cast<int>(msg.wParam);
-                break;
+                return true;
             case WM_MOUSEMOVE:
                 event.type = ch_event::type::mouse_move;
-                event.mouse_move.x = (int)(short)LOWORD(msg.lParam); // Extract
+                event.mouse_move.x = (int)(short)LOWORD(msg.lParam);
                 event.mouse_move.y = (int)(short)HIWORD(msg.lParam);
-                break;
-            case WM_LBUTTONDOWN:
+                return true;
+            case WM_LBUTTONDOWN: case WM_RBUTTONDOWN:
                 event.type = ch_event::type::mouse_down;
-                event.mouse_button.button = 0;
-                break;
-            case WM_LBUTTONUP:
+                event.mouse_button.button = (msg.message == WM_LBUTTONDOWN ? 0 : 1);
+                return true;
+            case WM_LBUTTONUP: case WM_RBUTTONUP:
                 event.type = ch_event::type::mouse_up;
-                event.mouse_button.button = 0;
-                break;
-            case WM_RBUTTONDOWN:
-                event.type = ch_event::type::mouse_down;
-                event.mouse_button.button = 1;
-                break;
-            case WM_RBUTTONUP:
-                event.type = ch_event::type::mouse_up;
-                event.mouse_button.button = 1;
-                break;
+                event.mouse_button.button = (msg.message == WM_LBUTTONUP ? 0 : 1);
+                return true;
         }
-        return true;
-
-    } else {
-        event.type = ch_event::type::none;
-        return false;
     }
+    event.type = ch_event::type::none;
+    return false;
+}
+
+
+void ch_window::invalidate() {
+    if (hwnd) InvalidateRect(hwnd, NULL, FALSE);
 }
 
 void ch_window::set_icon(std::string iconPath) {
