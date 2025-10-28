@@ -128,6 +128,29 @@ public:
     virtual void move(int offx, int offy) override;
 };
 
+class ch_circle : public ch_drawable {
+    // oh boy we're in for a ride
+public:
+    D2D1_ELLIPSE circle;
+    D2D1_COLOR_F color;
+
+    ch_circle(int x, int y, int radx, int rady, D2D1_COLOR_F c) {
+        circle = D2D1::Ellipse(
+            D2D1::Point2F(
+                static_cast<FLOAT>(x), 
+                static_cast<FLOAT>(y)
+            ),
+            radx,
+            rady
+        );
+        color = c;
+    }
+
+    void draw(ch_window& win) override;
+    virtual void setpos(int x, int y) override;
+    virtual void move(int offx, int offy) override;
+};
+
 
 class ch_text : public ch_drawable {
 // Warning:

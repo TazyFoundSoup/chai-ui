@@ -37,6 +37,25 @@ void ch_rect::move(int offx, int offy){
     if (owner) owner->invalidate();
 }
 
+void ch_circle::draw(ch_window& win) {
+    ID2D1SolidColorBrush* brush = win.brush_manager.poof(this->color);
+    win.m_pRenderTarget->FillEllipse(this->circle, brush);
+}
+
+void ch_circle::setpos(int x, int y) {
+    circle.point.x = static_cast<FLOAT>(x);
+    circle.point.y = static_cast<FLOAT>(y);
+
+    if (owner) owner->invalidate();
+}
+
+void ch_circle::move(int offx, int offy){
+    circle.point.x += static_cast<FLOAT>(offx);
+    circle.point.y += static_cast<FLOAT>(offy); // Offy sounds so cute ngl. i kinda want to make a pet beaver unicorn called offy.
+
+    if (owner) owner->invalidate();
+}
+
 void ch_text::draw(ch_window& win) {
     ID2D1SolidColorBrush* brush = win.brush_manager.poof(this->conf.color);
 
