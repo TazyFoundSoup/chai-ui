@@ -97,18 +97,36 @@ HRESULT ch_text::CreateDWriteResources() {
     return hr;
 }
 
-void ch_window::dbg_out(const std::string& msg) {
+void ch_window::dbg_out(const std::string& msg, int level) {
     if (!dbgEnabled) return;
 
-    std::string output = "[Chai-ui] " + msg + "\n";
-    std::cout << output;                 // Console if attached
-    OutputDebugStringA(output.c_str());  // IDE/DebugView if no console
+    // The level just changes the colour
+    // It's as simple as that.
+    if (level == DBG_INFO) {
+        std::string output = "[Chai-ui] " + msg + "\n";
+        std::cout << output;
+        OutputDebugStringA(output.c_str());
+    } else if (level == DBG_WARN) {
+        std::string output = "\033[0;33m[Chai-ui] " + msg + "\n";
+        std::string cleaned = output.substr(7); // Remove the ANSI code for the windows debug output
+        std::cout << output;
+        OutputDebugStringA(cleaned.c_str());
+    } else if (level == DBG_ERROR) {
+        std::string output = "\033[0;31m[Chai-ui] " + msg + "\n";
+        std::string cleaned = output.substr(7); // Remove the ANSI code for the windows debug output
+        std::cerr << output;
+        OutputDebugStringA(cleaned.c_str());
+    }
 }
 
-HRESULT ch_window::create() {
+HRESULT ch_window::create()
+{
     HRESULT hr;
 
     hr = CreateDeviceIndependentResources();
+
+    // This just enables the debugging requirements (just ANSI for now)
+    if (dbgEnabled) dbg_setup();
     
     if (SUCCEEDED(hr)) {
         sprintf(className, "Chai-ui-%lu", GetCurrentProcessId());
@@ -341,7 +359,19 @@ void ch_window::DiscardDeviceResource() {
     // boom 💥
 }
 
+void ch_window::dbg_setup() {
+    // This basically just enables ANSI codes
+    // for the console. But not for OutputDebugStringA
+    // because why not, that makes complete sense.
+    // Window's is totally not inconsistent at all.
+    // At least the function naming is consistent.
 
+    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    DWORD outMode;
+    GetConsoleMode(hOut, &outMode);
+    outMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+    SetConsoleMode(hOut, outMode);
+}
 
 ID2D1SolidColorBrush* ch_window::ch_brush_manager::poof(D2D1_COLOR_F color) {
     uint32_t key = hashclr(color);

@@ -207,8 +207,14 @@ public:
         ID2D1HwndRenderTarget* m_pRenderTarget;
     };
 
-    // Functions for debugging
-    void dbg_out(const std::string& msg);
+    // Debugging
+    typedef enum {
+        DBG_INFO,
+        DBG_WARN,
+        DBG_ERROR
+    } dbg_level;
+    void dbg_out(const std::string& msg, int level = DBG_INFO);
+
 
     HRESULT create();
     void destroy();
@@ -251,6 +257,9 @@ private:
     HRESULT CreateDeviceDependentResources();
 
     void DiscardDeviceResource();
+
+    // Debugging internals
+    void dbg_setup();
 };
 
 } // Internal
