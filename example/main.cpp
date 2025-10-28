@@ -11,9 +11,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         ch_text_conf{ L"Inter", 24.0f, D2D1::ColorF(D2D1::ColorF::Green), L"en-us" }, 
         D2D1::RectF(50, 50, 400, 100)
     );
+    auto circle = std::make_unique<ch_circle>(
+       500, 400, 75, 75,
+        D2D1::ColorF(D2D1::ColorF::Blue)
+    );
 
     window.draw(std::move(rect));
     window.draw(std::move(text));
+    window.draw(std::move(circle));
 
     window.dbg_out("Test warning message", ch_window::DBG_WARN);
     window.dbg_out("Test error message", ch_window::DBG_ERROR);
