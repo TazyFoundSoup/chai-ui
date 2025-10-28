@@ -11,8 +11,6 @@
 namespace Chai {
 namespace Internal {
 
-extern int main();
-
 void ch_rect::draw(ch_window& win) {
     ID2D1SolidColorBrush* brush = win.brush_manager.poof(this->color);
     win.m_pRenderTarget->FillRectangle(this->rect, brush);
