@@ -15,6 +15,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     window.draw(std::move(rect));
     window.draw(std::move(text));
 
+    window.dbg_out("Test warning message", ch_window::DBG_WARN);
+    window.dbg_out("Test error message", ch_window::DBG_ERROR);
+
     window.run();
     
 }
