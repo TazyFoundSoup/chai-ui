@@ -26,6 +26,7 @@
 #include <wchar.h>
 #include <math.h>
 #include <unordered_map>
+#include <chrono>
 
 #pragma once
 
@@ -283,6 +284,34 @@ private:
 
     // Debugging internals
     void dbg_setup();
+};
+
+class ch_clock {
+public:
+    ch_clock() : last(std::chrono::steady_clock::now()) {}
+
+    void tick();
+    void reset();
+
+    // Retrieving private member functions
+    float dt() const { return delta; }
+    float time() const { return elapsed; }
+
+    // Special function for multiplying dt by a value
+    // This is useful for movement stuff
+    float per(float amt) const { return delta * amt; }
+
+    void pause() { paused = true; }
+    void resume() { paused = false; }
+
+    void toggle() { paused = !paused; }
+
+    float speed_mod = 1.0f;
+private:
+    std::chrono::steady_clock::time_point last = {};
+    float delta = 0.0f;
+    float elapsed = 0.0f;
+    bool paused = false;
 };
 
 } // Internal

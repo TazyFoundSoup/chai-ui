@@ -419,6 +419,23 @@ uint32_t ch_window::ch_brush_manager::hashclr(D2D1_COLOR_F c) {
     // Return in hash format
     return (r << 24) | (g << 16) | (b << 8) | a;
 }
+
+void ch_clock::tick() {
+    if (paused) return;
+
+    auto now = std::chrono::steady_clock::now();
+    float delta = std::chrono::duration<float, std::milli>(now - last).count();
+    elapsed += delta;
+    last = now;
+
+}
+
+void ch_clock::reset() {
+    last = std::chrono::steady_clock::now();
+    delta = 0.0f;
+    elapsed = 0.0f;
+}
+
 }
 
 // Internal
