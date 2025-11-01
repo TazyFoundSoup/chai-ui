@@ -152,6 +152,22 @@ public:
     virtual void move(int offx, int offy) override;
 };
 
+class ch_line : public ch_drawable {
+public:
+    D2D1_POINT_2F head;
+    D2D1_POINT_2F tail;
+    D2D1_COLOR_F color;
+
+    ch_line(D2D1_POINT_2F from, D2D1_POINT_2F to, D2D1_COLOR_F c) {
+        head = from;
+        tail = to;
+        color = c;
+    }
+
+    void draw(ch_window& win) override;
+    virtual void setpos(int x, int y) override;
+    virtual void move(int offx, int offy) override;
+};
 
 class ch_text : public ch_drawable {
 // Warning:
