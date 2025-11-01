@@ -56,6 +56,15 @@ void ch_circle::move(int offx, int offy){
     if (owner) owner->invalidate();
 }
 
+void ch_line::draw(ch_window &win) {
+    ID2D1SolidColorBrush* brush = win.brush_manager.poof(this->color);
+    win.m_pRenderTarget->DrawLine(
+        this->head,
+        this->tail,
+        brush
+    );
+}
+
 void ch_text::draw(ch_window& win) {
     ID2D1SolidColorBrush* brush = win.brush_manager.poof(this->conf.color);
 
@@ -435,6 +444,8 @@ void ch_clock::reset() {
     delta = 0.0f;
     elapsed = 0.0f;
 }
+
+
 
 }
 
