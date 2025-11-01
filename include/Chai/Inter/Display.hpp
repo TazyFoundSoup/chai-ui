@@ -165,8 +165,8 @@ public:
     }
 
     void draw(ch_window& win) override;
-    virtual void setpos(int x, int y) override;
-    virtual void move(int offx, int offy) override;
+    void setpos(int headx, int heady, int tailx, int taily);
+    void move(int offx, int offy) override;
 };
 
 class ch_text : public ch_drawable {

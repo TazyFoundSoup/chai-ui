@@ -49,7 +49,7 @@ void ch_circle::setpos(int x, int y) {
     if (owner) owner->invalidate();
 }
 
-void ch_circle::move(int offx, int offy){
+void ch_circle::move(int offx, int offy) {
     circle.point.x += static_cast<FLOAT>(offx);
     circle.point.y += static_cast<FLOAT>(offy); // Offy sounds so cute ngl. i kinda want to make a pet beaver unicorn called offy.
 
@@ -63,6 +63,24 @@ void ch_line::draw(ch_window &win) {
         this->tail,
         brush
     );
+}
+
+void ch_line::setpos(int headx, int heady, int tailx, int taily) {
+    this->head.x = headx;
+    this->head.y = heady;
+    this->tail.x = tailx;
+    this->tail.y = taily;
+
+    this->owner->invalidate();
+}
+
+void ch_line::move(int offx, int offy){
+    this->head.x += offx;
+    this->head.y += offy;
+    this->tail.x += offx;
+    this->tail.y += offy;
+
+    if (owner) owner->invalidate();
 }
 
 void ch_text::draw(ch_window& win) {
