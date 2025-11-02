@@ -8,6 +8,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
 
     ch_clock clock;
     ch_rect box(100, 100, 200, 200, D2D1::ColorF(D2D1::ColorF::Red));
+    ch_line line(
+        D2D1::Point2F(300.f, 300.f),
+        D2D1::Point2F(500.f, 400.f),
+        D2D1::ColorF(D2D1::ColorF::Blue)
+    );
 
     float speed = 0.2f;
     float posX = 100.f;

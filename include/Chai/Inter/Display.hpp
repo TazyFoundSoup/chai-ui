@@ -154,6 +154,12 @@ public:
 
 class ch_line : public ch_drawable {
 public:
+    // I need to use the drawable
+    // to change the arguments of the setpos
+    // because of weird virtual stuff
+    using ch_drawable::setpos;
+    void setpos(int headx, int heady, int tailx, int taily);
+
     D2D1_POINT_2F head;
     D2D1_POINT_2F tail;
     D2D1_COLOR_F color;
@@ -165,7 +171,7 @@ public:
     }
 
     void draw(ch_window& win) override;
-    void setpos(int headx, int heady, int tailx, int taily);
+    void setpos(int x, int y) override;
     void move(int offx, int offy) override;
 };
 

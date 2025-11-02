@@ -65,13 +65,17 @@ void ch_line::draw(ch_window &win) {
     );
 }
 
-void ch_line::setpos(int headx, int heady, int tailx, int taily) {
-    this->head.x = headx;
-    this->head.y = heady;
-    this->tail.x = tailx;
-    this->tail.y = taily;
+void ch_line::setpos(int x, int y) {
+    throw std::runtime_error("ch_line::setpos(int x, int y) is a dud. Use ch_line::setpos(int headx, int heady, int tailx, int taily) instead.");
+}
 
-    this->owner->invalidate();
+void ch_line::setpos(int headx, int heady, int tailx, int taily) {
+    this->head.x = static_cast<FLOAT>(headx);
+    this->head.y = static_cast<FLOAT>(heady);
+    this->tail.x = static_cast<FLOAT>(tailx);
+    this->tail.y = static_cast<FLOAT>(taily);
+
+    if (owner) owner->invalidate();
 }
 
 void ch_line::move(int offx, int offy){
@@ -82,7 +86,6 @@ void ch_line::move(int offx, int offy){
 
     if (owner) owner->invalidate();
 }
-
 void ch_text::draw(ch_window& win) {
     ID2D1SolidColorBrush* brush = win.brush_manager.poof(this->conf.color);
 
