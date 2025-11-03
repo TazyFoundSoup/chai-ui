@@ -30,11 +30,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
 
         clock.tick();
 
-        // move box horizontally using delta time in ms
-        posX += clock.dt() * speed;
-        if (posX > 600.f || posX < 0.f) speed = -speed;
-
-        box.setpos((int)posX, 250);
+        box.move(static_cast<int>(speed * clock.per(1.0f)), 0);
 
         // color pulse using seconds
         float t = fmod(clock.time() / 1000.f, 2.f); // loop 0-2 seconds
@@ -42,6 +38,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
         box.color = D2D1::ColorF(1.f, green / 255.f, 0.f, 1.f);
 
         win.draw(std::make_unique<ch_rect>(box));
+        win.draw(std::make_unique<ch_line>(line));
     }
 
     return 0;
